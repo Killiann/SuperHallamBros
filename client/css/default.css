@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Aldrich|Bangers|VT323');
+/* This is like phat boi text > 'Bangers', cursive;
+  This is like arcade pixel text > 'VT323', monospace;
+  This is like pretty ugly text >  'Aldrich', sans-serif; */
+
+body {
+  background-color: rgb(65, 178, 181);
+  background-image: url('../res/img/defaultBacking.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-blend-mode: soft-light;
+  min-height: 720px;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.lobby {
+  padding-top: 10%;
+}
+
+.lobby #menu {
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 2px 2px 1px rgba(40, 40, 40, 0.2);
+  text-align: center;
+  margin: auto;
+  width: 30%;
+  min-width: 500px;
+  padding: 3%;
+}
+
+.lobby #menu button {
+  font-family: 'Bangers', cursive;
+  font-size: 2em;
+  border: 0px;
+  background-color: rgb(40,40,40);
+  color: rgb(240, 240, 240);
+  padding: 5%;
+  margin: 2%;
+  transition: all .4s ease-in-out;
+}
+
+.lobby #menu button:hover {
+  background-color: rgb(70,70,70);
+  cursor: pointer;
+  transform: scale(1.05);
+    transition: all .2s ease-in-out;
+}

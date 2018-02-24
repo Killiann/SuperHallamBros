@@ -6,7 +6,7 @@ const sokcet = require('socket.io')(serv, {});
 app.use('/client', express.static(__dirname + '/client'));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/client/test.html');
+  res.sendFile(__dirname + '/client/lobby.html');
 });
 
 serv.listen(1337);
