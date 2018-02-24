@@ -1,0 +1,28 @@
+{
+  "name": "superhallambros",
+  "version": "1.0.0",
+  "description": "An online game built for web browsers with Javscript. Super Smash brothers style gameplay. Gonna be hard af to make but it's for a uni project. ",
+  "main": "app.js",
+  "scripts": {
+    "test": "run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Killiann/SuperHallamBros.git"
+  },
+  "keywords": [
+    "Javascript",
+    "Game"
+  ],
+  "author": "Killian Comerford, Callum Beckwith, Oliver Clark and Josh Crooks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Killiann/SuperHallamBros/issues"
+  },
+  "homepage": "https://github.com/Killiann/SuperHallamBros#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "nodemon": "^1.15.1",
+    "socket.io": "^2.0.4"
+  }
+}
