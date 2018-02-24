@@ -11,11 +11,6 @@ body {
   background-blend-mode: soft-light;
   min-height: 720px;
   height: 100%;
-  vertical-align: middle;
-}
-
-.lobby {
-  padding-top: 10%;
 }
 
 .lobby #menu {
@@ -43,5 +38,63 @@ body {
   background-color: rgb(70,70,70);
   cursor: pointer;
   transform: scale(1.05);
-    transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+}
+
+.panel .title {
+  font-family: 'Bangers', cursive;
+  color: rgb(40,40,40);
+  font-size: 3em;
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 2px 2px 1px rgba(40, 40, 40, 0.2);
+  padding: 3%;
+  margin: 3%;
+}
+
+.panel {
+  margin: 5%;
+  width: 41%;
+  height: 100%;
+  padding: 2%;
+  float: left;
+}
+.panel .content {
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 2px 2px 1px rgba(40, 40, 40, 0.2);
+  margin: 3%;
+  padding: auto;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  font-family:'VT323', monospace;
+  font-stretch: expanded;
+  font-size: 1.2em;
+  overflow-y: hidden;
+  text-align: center;
+
+}
+
+.lobbyCharButton {
+  font-family: 'Bangers', cursive;
+  height: 100px;
+  width: 100px;
+  margin: 2%;
+  float: left;
+  transition: all .2s ease-in-out;
+  box-shadow: 1px 2px rgba(40, 40, 40, 0.4);
+  padding: 2%;
+  vertical-align: middle;
+}
+
+.lobbyCharButton:hover {
+    transform: scale(0.9);
+    cursor: pointer;
+}
+
+.inputBox {
+  font-family: 'Bangers', cursive;
+  font-size: 0.6em;
+  padding: 3%;
+  border: 0px;
+  background-color: rgba(255, 255, 255, 0);
+  color: rgb(70, 70, 70);
 }
