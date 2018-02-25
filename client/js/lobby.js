@@ -1,4 +1,5 @@
 var playerSelected = false;
+var socket;
 
 window.onload = function(){
   console.log("Welcome to Super Hallam Bros");
@@ -49,24 +50,28 @@ function characterMenu(){
 function lobbyJoiner(){
     let backing = $('<div></div>').addClass('panel').css({'marign-left' : '200vw', opacity: 0.0});
     let title = $('<div></div>').addClass('title').text('Servers:');
-    let content = $('<div></div>').addClass('content').text('Join current servers:');
+    let content = $('<div></div>').addClass('content');
 
     //Game selection content goes here, append to content
-    let joinGameButton = $('<button></button>').text('Join Server 1').attr({id : 'joinGameID', onclick: 'joinServer()'});
+    let joinGameButton = $('<button></button>').text('Join Server').attr({id : 'joinGameID', onclick: 'serverConnection()'});
+    let joinedPlayers = $('<div></div>').addClass('title').text('Current Players:');
+    let lobbyPlayers = $('<div></div>').addClass('content').attr({id: 'lobbyMenu'});
 
     $(content).append(joinGameButton);
-    $(backing).append(title, content);
+    $(backing).append(title, content, lobbyPlayers);
     return backing;
 };
 
 var playerInfo = {
   charIdentity : null,
   charName : "Character not Selected",
+  playerName : null,
   init : function(){
     let backing = $('<div></div>').addClass('title').text('You:');
     let hdnID = $('<input></input>').attr({value : this.charIdentity, hidden: true, id: 'charIDInput'});
     let nameField = $('<input></input>').attr({value: this.charName, id: 'charNameInput', readonly: true}).addClass('inputBox');
-    $(backing).append(hdnID, nameField);
+    let playerNameField = $('<input></input>').attr({id: 'playerNameInput', placeholder: 'Enter Nickname Here'}).addClass('inputBox');
+    $(backing).append(hdnID, $('<br>'), playerNameField, $('<br>'), nameField);
     return backing;
   },
   update : function(){
@@ -75,9 +80,7 @@ var playerInfo = {
   },
   //Getters and Setters
   setCharName : function(name){this.charName = name;},
-  getCharName : function(){return this.charName;},
-  setCharID : function(characterId){this.charIdentity = characterId;},
-  getCharID : function(){return this.charIdentity;}
+  setCharID : function(characterId){this.charIdentity = characterId;}
 }
 
 var characterButton = function(charID, name, image){
@@ -95,17 +98,53 @@ var characterButton = function(charID, name, image){
 };
 
 //Deal with socket stuff from here
-function joinServer(){
+function serverConnection(){
   if (playerSelected) {
-    onJoin();
+    if (socket == null) {
+      onJoin();
+      $('#joinGameID').text('Leave Server').attr({onclick: 'onDisconnect()'});
+    }else {
+      console.log("You're already connected");
+    }
   }else {
     console.log("Please select a character...Yes this needs to be a UI warning later on.");
   }
 }
 
+//Read stuff send from server
+function listenToServer(){
+  socket.on('sendLobbyPlayers', function(data){
+    $('#lobbyMenu').empty();
+    for (var items in data) {
+      if (data.hasOwnProperty(items)) {
+        var playerBar = $('<div></div>').addClass('content');
+        var playerNick = $('<p></p>').text(data[items].playerName);
+        var playerCharacter = $('<p></p>').text(data[items].name);
+        $(playerBar).append(playerNick, playerCharacter);
+        $('#lobbyMenu').append(playerBar);
+      }
+    }
+
+
+  });
+}
+
 //After join Game
 function onJoin(){
-  console.log("socket io should be a thing");
-  var socket = io();
+  console.log("Connected to the Server.");
+  socket = io();
+  socket.emit('setupPlayer', {characterName: playerInfo.charName, characterID: playerInfo.charIdentity, playerName: $('#playerNameInput').val()});
+  listenToServer();
+}
 
+function onDisconnect(){
+  if (socket != null) {
+    socket.emit('leave');
+    socket = null;
+    delete socket;
+    console.log("Disconnected from the Server");
+    $('#joinGameID').text('Join Server').attr({onclick: 'serverConnection()'});
+  }else{
+    console.log("Not currently connected");
+  }
 }
