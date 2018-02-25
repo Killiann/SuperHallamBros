@@ -52,7 +52,7 @@ function lobbyJoiner(){
     let content = $('<div></div>').addClass('content').text('Join current servers:');
 
     //Game selection content goes here, append to content
-    let joinGameButton = $('<button></button>').text('Join Server 1').attr({id : 'joinGameID'});
+    let joinGameButton = $('<button></button>').text('Join Server 1').attr({id : 'joinGameID', onclick: 'joinServer()'});
 
     $(content).append(joinGameButton);
     $(backing).append(title, content);
@@ -95,14 +95,13 @@ var characterButton = function(charID, name, image){
 };
 
 //Deal with socket stuff from here
-$('#joinGameID').on('click', function(){
-    console.log("clicked");
-    if (playerSelected) {
-      onJoin();
-    }else {
-      console.log("Please select a character...Yes this needs to be a UI warning later on.");
-    }
-});
+function joinServer(){
+  if (playerSelected) {
+    onJoin();
+  }else {
+    console.log("Please select a character...Yes this needs to be a UI warning later on.");
+  }
+}
 
 //After join Game
 function onJoin(){
