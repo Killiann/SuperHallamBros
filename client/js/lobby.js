@@ -1,5 +1,8 @@
+var playerSelected = false;
+
 window.onload = function(){
   console.log("Welcome to Super Hallam Bros");
+
 }
 
 function lobbyBegin() {
@@ -45,16 +48,16 @@ function characterMenu(){
 
 function lobbyJoiner(){
     let backing = $('<div></div>').addClass('panel').css({'marign-left' : '200vw', opacity: 0.0});
-    let title = $('<div></div>').addClass('title').text('Join Game');
-    let content = $('<div></div>').addClass('content').text('Where the current players that are about to start a game go.');
+    let title = $('<div></div>').addClass('title').text('Servers:');
+    let content = $('<div></div>').addClass('content').text('Join current servers:');
 
     //Game selection content goes here, append to content
+    let joinGameButton = $('<button></button>').text('Join Server 1').attr({id : 'joinGameID'});
 
-
+    $(content).append(joinGameButton);
     $(backing).append(title, content);
     return backing;
 };
-
 
 var playerInfo = {
   charIdentity : null,
@@ -82,11 +85,28 @@ var characterButton = function(charID, name, image){
     this.init = function(){
       let base = $('<div></div>').addClass('lobbyCharButton').css({background : image, id : 'charButton_' + charID}).text(name);
       $(base).click(function(){
-        console.log("Clicked character " + charID);
         playerInfo.charIdentity = charID;
         playerInfo.charName = name;
         playerInfo.update();
+        playerSelected = true;
       });
       return base;
     }
 };
+
+//Deal with socket stuff from here
+$('#joinGameID').on('click', function(){
+    console.log("clicked");
+    if (playerSelected) {
+      onJoin();
+    }else {
+      console.log("Please select a character...Yes this needs to be a UI warning later on.");
+    }
+});
+
+//After join Game
+function onJoin(){
+  console.log("socket io should be a thing");
+  var socket = io();
+
+}

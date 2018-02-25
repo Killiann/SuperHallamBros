@@ -34,6 +34,23 @@ body {
   transition: all .4s ease-in-out;
 }
 
+button {
+  font-family: 'Bangers', cursive;
+  font-size: 1em;
+  border: 0px;
+  background-color: rgb(40,40,40);
+  color: rgb(240, 240, 240);
+  padding: 5%;
+  margin: 2%;
+  transition: all .4s ease-in-out;
+}
+button:hover {
+ background-color: rgb(70,70,70);
+ cursor: pointer;
+ transform: scale(1.05);
+ transition: all .2s ease-in-out;
+}
+
 .lobby #menu button:hover {
   background-color: rgb(70,70,70);
   cursor: pointer;
