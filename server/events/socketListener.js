@@ -1,4 +1,5 @@
 const plrData = require(__dirname + '/../../server/player/playerData.js');
+const gameData = require(__dirname + '/../../server/events/beginGame.js');
 
 exports.join = (socket, socketList) => {
   socket.id = Math.random();
@@ -13,6 +14,7 @@ exports.eventListener = (socket, socketList, playerData) => {
     console.log("removed player with id " + identity);
     delete socketList[identity];
     delete playerData[identity];
+    gameData.removePlayer();
   });
 
   //This is here to force leave from client even if still on page.

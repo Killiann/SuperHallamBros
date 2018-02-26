@@ -1,5 +1,6 @@
 var playerSelected = false;
 var socket;
+var gameBeginTimer;
 
 window.onload = function(){
   console.log("Welcome to Super Hallam Bros");
@@ -54,10 +55,11 @@ function lobbyJoiner(){
 
     //Game selection content goes here, append to content
     let joinGameButton = $('<button></button>').text('Join Server').attr({id : 'joinGameID', onclick: 'serverConnection()'});
+    let lobbyTimer = $('<div></div>').text("Game can't start; Not enough players. (2 Min)").attr({id: 'lobbyTimer'});
     let joinedPlayers = $('<div></div>').addClass('title').text('Current Players:');
     let lobbyPlayers = $('<div></div>').addClass('content').attr({id: 'lobbyMenu'});
 
-    $(content).append(joinGameButton);
+    $(content).append(joinGameButton, lobbyTimer);
     $(backing).append(title, content, lobbyPlayers);
     return backing;
 };
@@ -117,15 +119,32 @@ function listenToServer(){
     $('#lobbyMenu').empty();
     for (var items in data) {
       if (data.hasOwnProperty(items)) {
-        var playerBar = $('<div></div>').addClass('content');
-        var playerNick = $('<p></p>').text(data[items].playerName);
-        var playerCharacter = $('<p></p>').text(data[items].name);
+        var playerBar = $('<div></div>').addClass('title').css({'font-size' : '0.9em'});
+        var playerNick = $('<a></a>').text(data[items].playerName + " is playing as ").css({'text-align': 'left'});
+        var playerCharacter = $('<a></a>').text(data[items].name).css({'color' : 'rgb(20, 152, 138)'});
         $(playerBar).append(playerNick, playerCharacter);
         $('#lobbyMenu').append(playerBar);
       }
     }
+  });
+  socket.on('lobbyCountDown', function(data){
+      gameBeginTimer =  data.time;
+      $('#lobbyTimer').text("Game starting in: " + gameBeginTimer);
+      if (gameBeginTimer == '0') {
+        deleteLobby();
+      }
+  });
+}
 
-
+//Remove lobbyMenu
+function deleteLobby(){
+  console.log("Should be removing lobby");
+  $('.lobby').animate({
+    'margin-top': '400',
+    opacity: 0.0
+  }, 800, function(){
+    $(this).remove();
+    mainGame();
   });
 }
 
