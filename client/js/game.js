@@ -1,5 +1,6 @@
 let playerEntities = [];
 
+//main needs to be organsied
 function mainGame(gameData){
 
   let playerCount = gameData.playerAmount;
@@ -36,6 +37,7 @@ function mainGame(gameData){
 
 }
 
+//move into event class
 let addPlayerMovementDetection = function(){
   document.onkeydown = function(e){
     if (e.keyCode === 68) { //d
@@ -55,6 +57,7 @@ let addPlayerMovementDetection = function(){
     }
 }
 
+//do we really need this? we'll fnd out in the future
 function updateNonEventCausedPlayerMovement(){
   setInterval(function(){
     var playerPositions = {};
@@ -67,6 +70,7 @@ function updateNonEventCausedPlayerMovement(){
   }, 1000/60);
 }
 
+//dont know if this is nes for y values as it screws with velocity, may fuck up a knock back system....
 function updatePlayerPositions(playerData){
     for (var player in playerData) {
       if (playerData.hasOwnProperty(player)) {
