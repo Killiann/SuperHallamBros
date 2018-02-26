@@ -18,3 +18,24 @@ exports.sendToAllSockets = (socketArray, emitName, data) => {
       }
     }
 }
+
+exports.sendPerTick = (playerData, socketData) => {
+
+  setInterval(() => {
+
+    let playerPacket = {};
+
+    for (var i in playerData) {
+      if (playerData.hasOwnProperty(i)) {
+        var player = playerData[i];
+        player.updatePos();
+        playerPacket[player.id] = {x:player.x, y: player.y};
+      }
+    }
+    for (var i in socketData) {
+      let socket = socketData[i];
+      socket.emit('playerMovement', playerPacket);
+    }
+
+  }, 1000/60);
+}

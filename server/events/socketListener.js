@@ -27,4 +27,33 @@ exports.eventListener = (socket, socketList, playerData) => {
       player = plrData.Player(identity, data.characterName, data.characterID, data.playerName);
       playerData[identity] = player;
   });
+
+  //Player movement here
+  socket.on('movementKeyPress', (data) => {
+    let player = playerData[identity];
+
+    if (data.inputID === 'right'){
+        player.ctrlRight = data.state;
+    }else if (data.inputID === 'left') {
+      player.ctrlLeft = data.state;
+    }else if (data.inputID === 'jump') {
+      player.ctrlJump = data.state;
+    }
+
+  });
+
+  socket.on('movementJump', (data) => {
+    let player = playerData[identity];
+    socket.emit('playerJumper', {player: player.id});
+  });
+
+  socket.on('nonEventPlayerMovement', (data) => {
+    for (var player in data) {
+      if (data.hasOwnProperty(player)) {
+        let p = playerData[player];
+        p.x = data[player].x;
+        p.y = data[player].y;
+      }
+    }
+  });
 }

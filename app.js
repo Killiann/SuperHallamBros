@@ -24,3 +24,4 @@ socket.sockets.on('connection', (socket, data) => {
 });
 
 socketSending.sendDataPerSec(PLAYER_DATA, SOCKET_LIST);
+socketSending.sendPerTick(PLAYER_DATA, SOCKET_LIST);

@@ -130,9 +130,12 @@ function listenToServer(){
   socket.on('lobbyCountDown', function(data){
       gameBeginTimer =  data.time;
       $('#lobbyTimer').text("Game starting in: " + gameBeginTimer);
-      if (gameBeginTimer == '0') {
-        deleteLobby();
-      }
+  });
+
+  socket.on('gameInit', function(data){
+    console.log("Yeah this happens");
+    deleteLobby();
+    mainGame(data);
   });
 }
 
@@ -141,10 +144,9 @@ function deleteLobby(){
   console.log("Should be removing lobby");
   $('.lobby').animate({
     'margin-top': '400',
-    opacity: 0.0
+      opacity: 0.0
   }, 800, function(){
     $(this).remove();
-    mainGame();
   });
 }
 

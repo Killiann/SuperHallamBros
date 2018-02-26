@@ -115,3 +115,8 @@ button:hover {
   background-color: rgba(255, 255, 255, 0);
   color: rgb(70, 70, 70);
 }
+
+#game {
+  text-align: center;
+  margin: auto;
+}
