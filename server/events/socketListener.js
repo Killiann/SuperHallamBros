@@ -1,5 +1,6 @@
 const plrData = require(__dirname + '/../../server/player/playerData.js');
 const gameData = require(__dirname + '/../../server/events/beginGame.js');
+const socketSending = require(__dirname + '/../../server/events/socketSender.js');
 
 exports.join = (socket, socketList) => {
   socket.id = Math.random();
@@ -44,7 +45,7 @@ exports.eventListener = (socket, socketList, playerData) => {
 
   socket.on('movementJump', (data) => {
     let player = playerData[identity];
-    socket.emit('playerJumper', {player: player.id});
+    socketSending.sendToAllSockets(socketList, 'playerJumper', {playerID: playerData[identity].id});
   });
 
   socket.on('nonEventPlayerMovement', (data) => {

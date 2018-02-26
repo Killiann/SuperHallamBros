@@ -14,21 +14,24 @@ function mainGame(gameData){
   //Init all player entities
   for (var i = 0; i < playerCount; i++) {
       playerEntities[playersID[i]] = Crafty.e('Player, 2D, Canvas, Gravity, Color, Motion').color('rgb(78, 78, 78)').gravity('Ground');
-      playerEntities[playersID[i]].attr({h: 50, w:50});
-      var playerTag = Crafty.e('2D, DOM, Text').text(playerNames[i]);
-      playerEntities[playersID[i]].attach(playerTag);
+      playerEntities[playersID[i]].attr({h: 80, w:50});
+      var playerBackground = Crafty.e('2D, Canvas, Color').attr({h:20, w:50}).color('rgb(70,70,70,0.2)');
+      var playerTag = Crafty.e('2D, DOM, Text').text(playerNames[i]).textColor('white').textAlign('center').attr({w:50, h:20}).textFont({size: '14px', family: "Bangers"});
+      playerBackground.attach(playerTag);
+      playerEntities[playersID[i]].attach(playerBackground);
   }
 
   //Add event listeners
   addPlayerMovementDetection();
-  updateNonEventCausedPlayerMovement();
+  //updateNonEventCausedPlayerMovement();
 
   socket.on('playerMovement', function(data){
     updatePlayerPositions(data);
   });
 
   socket.on('playerJumper', function(data){
-      playerEntities[data.player].velocity().y -= 100;
+      console.log("jumping player " + data.playerID);
+      playerEntities[data.playerID].velocity().y -= 100;
   });
 
 }
@@ -61,14 +64,14 @@ function updateNonEventCausedPlayerMovement(){
       }
     }
     socket.emit('nonEventPlayerMovement', playerPositions);
-  }, 4);
+  }, 1000/60);
 }
 
 function updatePlayerPositions(playerData){
     for (var player in playerData) {
       if (playerData.hasOwnProperty(player)) {
         var p = playerEntities[player];
-        p.attr({x: playerData[player].x, y: playerData[player].y});
+        p.attr({x: playerData[player].x});
       }
     }
 }
