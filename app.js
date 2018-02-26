@@ -12,7 +12,7 @@ let PLAYER_DATA = {};
 app.use('/client', express.static(__dirname + '/client'));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/client/lobby.html');
+  res.sendFile(__dirname + '/client/game.html');
 });
 
 serv.listen(1337);
