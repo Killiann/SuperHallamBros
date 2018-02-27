@@ -10,7 +10,7 @@ function mainGame(gameData){
   Crafty.init(720, 720, document.getElementById('game'));
 
   //Init map Here
-  var ground = Crafty.e('Ground, 2D, Canvas, Color').attr({x: 60, y: 500, w:700, h: 20}).color('rgb(52, 163, 117)');
+  mapGenerator();
 
   //Init all player entities
   for (var i = 0; i < playerCount; i++) {
