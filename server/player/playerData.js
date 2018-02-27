@@ -8,13 +8,36 @@ exports.Player = (id, name, charID, nickName) => {
     y:300,
     ctrlRight: false,
     ctrlLeft: false,
-    maxSpd: 20
+    acceleration:0.3,
+    velocityX: 0,
+    friction: 0.3,
+    maxVelocityX: 6
   }
+  // self.updatePos = () => {
+  //   if (self.ctrlRight)
+  //     self.x += self.maxSpd;
+  //   if (self.ctrlLeft)
+  //     self.x -= self.maxSpd;
+  // }
   self.updatePos = () => {
-    if (self.ctrlRight)
-      self.x += self.maxSpd;
-    if (self.ctrlLeft)
-      self.x -= self.maxSpd;
+    if(self.ctrlRight && self.velocityX <= self.maxVelocityX){
+      self.velocityX += self.acceleration;
+    }
+    else if(self.ctrlLeft && self.velocityX >= -self.maxVelocityX){
+      self.velocityX -= self.acceleration;
+    }
+    else{
+      if(self.velocityX > 0){
+        self.velocityX -= self.friction;
+      }
+      if(self.velocityX < 0){
+        self.velocityX += self.friction;
+      }
+      if(self.velocityX <= 0.9 && self.velocityX >= -0.9){
+        self.velocityX = 0;
+      }
+    }
+    self.x += self.velocityX;
   }
   return self;
 }

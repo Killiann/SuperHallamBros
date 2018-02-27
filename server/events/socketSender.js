@@ -37,5 +37,5 @@ exports.sendPerTick = (playerData, socketData) => {
       socket.emit('playerMovement', playerPacket);
     }
 
-  }, 1000/60);
+  }, 1000/128);
 }
