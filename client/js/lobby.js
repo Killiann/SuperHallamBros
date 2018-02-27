@@ -8,6 +8,10 @@ window.onload = function(){
 }
 
 function lobbyBegin() {
+    $('#logo').animate({
+      'width': '25%',
+      'margin-bottom': '-3%'
+    });
     $('#menu').animate({
       opacity : 0.0,
       transform: 'Scale(0.0)'
