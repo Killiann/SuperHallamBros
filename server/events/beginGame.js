@@ -11,7 +11,7 @@ exports.removePlayer = () => {
 
 exports.canStart = (socket, playerDetails, socketDetails) => {
     this.addPlayer();
-    if (playerCount > 0) {
+    if (playerCount > 1) {
 
       var countdown;
       let lobbyTimer = 3;
@@ -27,7 +27,7 @@ exports.canStart = (socket, playerDetails, socketDetails) => {
           clearInterval(countdown);
           onGameStart(playerDetails, socketDetails);
         };
-        if (playerCount < 1) clearInterval(countdown);
+        if (playerCount < 2) clearInterval(countdown);
         socketSending.sendToAllSockets(socketDetails ,'lobbyCountDown', {time: lobbyTimer});
 
       }, 1000);
