@@ -37,8 +37,6 @@ exports.eventListener = (socket, socketList, playerData) => {
         player.ctrlRight = data.state;
     }else if (data.inputID === 'left') {
       player.ctrlLeft = data.state;
-    }else if (data.inputID === 'jump') {
-      player.ctrlJump = data.state;
     }
 
   });

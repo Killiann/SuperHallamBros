@@ -22,6 +22,7 @@ function mainGame(gameData){
       playerEntities[playersID[i]].attach(playerBackground);
   }
 
+
   //Add event listeners
   addPlayerMovementDetection();
   //updateNonEventCausedPlayerMovement();
@@ -32,7 +33,7 @@ function mainGame(gameData){
 
   socket.on('playerJumper', function(data){
       console.log("jumping player " + data.playerID);
-      playerEntities[data.playerID].velocity().y -= 100;
+      playerEntities[data.playerID].velocity().y -= 300;
   });
 
 }
