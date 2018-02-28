@@ -13,12 +13,6 @@ exports.Player = (id, name, charID, nickName) => {
     friction: 0.3,
     maxVelocityX: 6
   }
-  // self.updatePos = () => {
-  //   if (self.ctrlRight)
-  //     self.x += self.maxSpd;
-  //   if (self.ctrlLeft)
-  //     self.x -= self.maxSpd;
-  // }
   self.updatePos = () => {
     if(self.ctrlRight && self.velocityX <= self.maxVelocityX){
       self.velocityX += self.acceleration;

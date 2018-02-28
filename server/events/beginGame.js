@@ -36,14 +36,6 @@ exports.canStart = (socket, playerDetails, socketDetails) => {
 }
 
 function onGameStart(playerDetails, socketDetails){
-    var playerIdentities = [];
-    var playerNicks = [];
-    for (var player in playerDetails) {
-      if (playerDetails.hasOwnProperty(player)) {
-        playerIdentities.push(player);
-        playerNicks.push(playerDetails[player].playerName);
-      }
-    }
     console.log("Sending Lobby Deatils to clients for first game Initialisation.");
-    socketSending.sendToAllSockets(socketDetails, 'gameInit', {playerAmount: playerCount, playersID: playerIdentities, playerNick: playerNicks});
+    socketSending.sendToAllSockets(socketDetails, 'gameInit', {playerData: playerDetails});
 }
