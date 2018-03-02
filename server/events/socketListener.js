@@ -42,7 +42,6 @@ exports.eventListener = (socket, socketList, playerData) => {
   });
 
   socket.on('movementJump', (data) => {
-    let player = playerData[identity];
     socketSending.sendToAllSockets(socketList, 'playerJumper', {playerID: playerData[identity].id});
   });
 
@@ -54,5 +53,9 @@ exports.eventListener = (socket, socketList, playerData) => {
         p.y = data[player].y;
       }
     }
+  });
+
+  socket.on('playerClick', (data) => {
+    socketSending.sendToAllSockets(socketList, 'playerClicked', {x: data.x, y:data.y, playerID: playerData[identity].id});
   });
 }

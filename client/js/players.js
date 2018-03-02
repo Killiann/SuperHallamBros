@@ -44,4 +44,29 @@ function Character(id, characterID, nickName){
       this.jump = function(){
         this.entity.velocity().y -= 300;
       }
+      this.getWeaponData = function(){
+        return classDetails[this.char];
+      }
+      this.fireWeaponAt = function(x, y){
+        let projectile = Crafty.e('Projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: this.getX(), y: this.getY()});
+        projectile.velocity().x += 300;
+        setTimeout(function(){
+          projectile.destroy();
+        }, 10000);
+      }
+}
+
+var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
+
+var memetClass = new weaponClass(75, 10, 0, 1.1, 'rgb(79, 79, 79)');
+var pascalClass = new weaponClass(15, 5, 75, 1, 'rgb(38, 38, 38)');
+var mikeClass = new weaponClass(5, 0, 50, 1, 'rgb(208, 20, 144)');
+var nannyClass = new weaponClass(15, 5, 75, 1, 'rgb(79, 79, 79)');
+
+function weaponClass(damage, weight, fireRate, fireDrawback, projectileImage){
+  this.damage = damage;
+  this.weight = weight;
+  this.fireRate = fireRate;
+  this.fireDrawback = fireDrawback;
+  this.image = projectileImage;
 }

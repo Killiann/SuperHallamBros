@@ -24,6 +24,11 @@ function mainGame(gameData){
       PLAYER_ENTITIES[data.playerID].jump();
   });
 
+  socket.on('playerClicked', function(data){
+    console.log("Fired weapon");
+      PLAYER_ENTITIES[data.playerID].fireWeaponAt(data.x, data.y);
+  });
+
 }
 
 //do we really need this? we'll fnd out in the future

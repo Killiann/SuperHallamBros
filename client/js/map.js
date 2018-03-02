@@ -57,7 +57,7 @@ var map = [
 var tileColors = [
                   {color: null, colide: null, name: 'Air'}, //Air ID:0
                   {color: 'rgb(96, 171, 121)', colide: 'Ground', name: 'Grass'}, //Stone ID:1
-                  {color: 'rgb(89, 89, 89)', colide: 'Ground', name: 'Stone'} //Grass ID:2
+                  {color: 'rgb(89, 89, 89)', colide: 'Ground', name: 'Stone'}, //Grass ID:2
                 ];
 
 function mapGenerator(){
@@ -73,5 +73,5 @@ function mapGenerator(){
 }
 
 function generateTile(tileID, x, y){
-  Crafty.e(tileID.colide +', 2D, Canvas, Color').color(tileID.color).attr({x: x, y: y, w:10, h:20});
+  Crafty.e(tileID.colide +', 2D, Canvas, Color').color(tileID.color).attr({x: x, y: y, w:10, h:10});
 }

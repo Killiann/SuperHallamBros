@@ -1,5 +1,6 @@
 function handlePlayerInput(){
   addPlayerMovementDetection();
+  addPlayerClickDetection();
 }
 
 
@@ -20,4 +21,13 @@ let addPlayerMovementDetection = function(){
           socket.emit('movementKeyPress', {inputID: 'left', state: false});
         }
     }
+}
+
+let addPlayerClickDetection = function(){
+  window.onclick = function(event){
+    console.log("client click");
+    var x = event.clientX;
+    var y = event.clientY;
+    socket.emit('playerClick', {x: x, y: y});
+  }
 }
