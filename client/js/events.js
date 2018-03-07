@@ -24,10 +24,12 @@ let addPlayerMovementDetection = function(){
 }
 
 let addPlayerClickDetection = function(){
-  window.onclick = function(event){
-    console.log("client click");
+  var game = document.getElementById('game');
+  game.onclick = function(event){
+
     var x = event.clientX;
     var y = event.clientY;
+    console.log("client click x:" + x + " y:" + y) ;
     socket.emit('playerClick', {x: x, y: y});
   }
 }

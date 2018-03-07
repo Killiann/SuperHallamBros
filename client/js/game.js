@@ -25,7 +25,7 @@ function mainGame(gameData){
   });
 
   socket.on('playerClicked', function(data){
-    console.log("Fired weapon");
+      console.log(data.playerID + " Fired weapon");
       PLAYER_ENTITIES[data.playerID].fireWeaponAt(data.x, data.y);
   });
 

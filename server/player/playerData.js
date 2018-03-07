@@ -11,7 +11,8 @@ exports.Player = (id, name, charID, nickName) => {
     acceleration:0.3,
     velocityX: 0,
     friction: 0.3,
-    maxVelocityX: 6
+    maxVelocityX: 6,
+    canShoot: true
   }
   self.updatePos = () => {
     if(self.ctrlRight && self.velocityX <= self.maxVelocityX){
@@ -32,6 +33,9 @@ exports.Player = (id, name, charID, nickName) => {
       }
     }
     self.x += self.velocityX;
+  }
+  self.setCanShoot = (value) => {
+    self.canShoot = value;
   }
   return self;
 }
