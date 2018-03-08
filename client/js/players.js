@@ -21,8 +21,6 @@ var nannyClass = new weaponClass(15, 8, 5, 75, 1, 'rgb(79, 79, 79)');
 
 var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
 
-console.log("Character ID: " + JSON.stringify(classDetails) + "\n");
-
 function Character(id, characterID, nickName){
       this.id = id;
       this.char = characterID;
@@ -70,7 +68,7 @@ function Character(id, characterID, nickName){
         socket.emit('playerShooting', {canShoot: false});
         setTimeout(function(){
           socket.emit('playerShooting', {canShoot: true});
-        }, weapon.fireRate * 10);
+        }, weapon.fireRate * 3);
 
         //create projectile
         var projectile = Crafty.e('2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
