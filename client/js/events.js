@@ -29,7 +29,7 @@ let addPlayerClickDetection = function(){
 
     var x = event.clientX;
     var y = event.clientY;
-    console.log("client click x:" + x + " y:" + y) ;
+    // console.log("client click x:" + x + " y:" + y) ;
     socket.emit('playerClick', {x: x, y: y});
   }
 }

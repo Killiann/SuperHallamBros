@@ -56,8 +56,9 @@ exports.eventListener = (socket, socketList, playerData) => {
   });
 
   socket.on('playerClick', (data) => {
-    if(playerData[identity].canShoot){
+    if (playerData[identity].canShoot) {
       socketSending.sendToAllSockets(socketList, 'playerClicked', {x: data.x, y:data.y, playerID: playerData[identity].id});
+      playerData[identity].setCanShoot(data.canShoot);
     }
   });
 

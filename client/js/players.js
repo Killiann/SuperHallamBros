@@ -4,7 +4,7 @@ function addPlayers(playerDetails){
     if (playerDetails.hasOwnProperty(p)) {
 
       //Init player model data
-      PLAYER_ENTITIES[p] = new Character(p, playerDetails[p].characterID, playerDetails[p].playerName);
+      PLAYER_ENTITIES[p] = new Character(p, playerDetails[p].characterID, playerDetails[p].playerName, playerDetails);
 
       //Create the entity by running this method
       PLAYER_ENTITIES[p].entity;
@@ -21,12 +21,15 @@ var nannyClass = new weaponClass(15, 8, 5, 75, 1, 'rgb(79, 79, 79)');
 
 var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
 
-function Character(id, characterID, nickName){
+function Character(id, characterID, nickName, playerDetails){
       this.id = id;
       this.char = characterID;
       this.nick = nickName;
       this.weaponData = classDetails[this.char - 1];
-      this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50});
+      this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200);
+
+      //collsion stugg
+      addProjectileCollisions(this.entity, playerDetails);
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
       var playerTag = Crafty.e('2D, DOM, Text').text(this.nick).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
@@ -54,7 +57,6 @@ function Character(id, characterID, nickName){
       this.fireWeaponAt = function(x, y){
 
         var weapon = this.weaponData;
-        console.log(JSON.stringify(weapon));
 
         //Click positions
         var x1 = this.getX();
@@ -68,14 +70,14 @@ function Character(id, characterID, nickName){
         socket.emit('playerShooting', {canShoot: false});
         setTimeout(function(){
           socket.emit('playerShooting', {canShoot: true});
-        }, weapon.fireRate * 3);
+        }, weapon.fireRate);
 
         //create projectile
-        var projectile = Crafty.e('2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
+        var projectile = Crafty.e(this.id + '_projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
 
         //Shoot it
-        projectile.vx = dx * weapon.speed;
-        projectile.vy = dy * weapon.speed;
+        projectile.vx = dx;
+        projectile.vy = dy;
 
         //Despawn after this timer
         setTimeout(function(){
@@ -91,4 +93,14 @@ function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileIm
   this.fireRate = fireRate;
   this.fireDrawback = fireDrawback;
   this.image = projectileImage;
+}
+
+function addProjectileCollisions(entity, playerDetails){
+    for (var key in playerDetails) {
+      if (playerDetails.hasOwnProperty(key)) {
+        entity.onHit(key + '_projectile', function(data){
+          console.log("Hit with player ");
+        });
+      }
+    }
 }

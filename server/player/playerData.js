@@ -12,7 +12,8 @@ exports.Player = (id, name, charID, nickName) => {
     velocityX: 0,
     friction: 0.3,
     maxVelocityX: 6,
-    canShoot: true
+    canShoot: true,
+    health: 3
   }
   self.updatePos = () => {
     if(self.ctrlRight && self.velocityX <= self.maxVelocityX){
@@ -36,6 +37,18 @@ exports.Player = (id, name, charID, nickName) => {
   }
   self.setCanShoot = (value) => {
     self.canShoot = value;
+  }
+  self.takeDamage = () => {
+    if (self.health != 0) {
+      self.health--;
+      if (self.health == 0) {
+        self.die();
+      }
+    }
+  }
+  self.die = () => {
+    console.log("Player " + self.id + " died.");
+    //death stuff
   }
   return self;
 }
