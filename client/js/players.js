@@ -14,10 +14,10 @@ function addPlayers(playerDetails){
 }
 
 //Class weapon attributes
-var memetClass = new weaponClass(75, 8, 10, 0, 1.1, 'rgb(79, 79, 79)');
+var memetClass = new weaponClass(75, 8, 10, 0, 1.1, 'rgb(237, 237, 237)');
 var pascalClass = new weaponClass(15, 5, 5, 75, 1, 'rgb(38, 38, 38)');
 var mikeClass = new weaponClass(5, 3, 0, 50, 1, 'rgb(208, 20, 144)');
-var nannyClass = new weaponClass(15, 8, 5, 75, 1, 'rgb(79, 79, 79)');
+var nannyClass = new weaponClass(15, 8, 5, 75, 1, 'rgb(204, 15, 15)');
 
 var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
 
@@ -29,12 +29,16 @@ function Character(id, characterID, nickName, playerDetails){
       this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200);
 
       //collsion stugg
-      addProjectileCollisions(this.entity, playerDetails);
+      this.entity.ignoreHits(this.id + "_projectile"); //This doesn't seem to have an effect.
+      addProjectileCollisions(this.entity, playerDetails, this.id);
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
       var playerTag = Crafty.e('2D, DOM, Text').text(this.nick).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
       playerBackground.attach(playerTag);
       this.entity.attach(playerBackground);
+
+      //create health bar
+      var healthUI = new healthBar(this.id, this.nick);
 
       this.setColour = function(colour){
         this.entity.color(colour);
@@ -84,6 +88,12 @@ function Character(id, characterID, nickName, playerDetails){
           projectile.destroy();
         }, 10000);
       }
+      this.onHit = function(){
+        socket.emit('playerHit');
+      }
+      this.takeDamage = function(health){
+        healthUI.updateBar(health);
+      }
 }
 
 function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileImage){
@@ -95,12 +105,17 @@ function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileIm
   this.image = projectileImage;
 }
 
-function addProjectileCollisions(entity, playerDetails){
+function addProjectileCollisions(entity, playerDetails, playerID){
     for (var key in playerDetails) {
-      if (playerDetails.hasOwnProperty(key)) {
+      if (playerDetails.hasOwnProperty(key) && key != playerID) {
+
         entity.onHit(key + '_projectile', function(data){
-          console.log("Hit with player ");
+          for (var i = 0; i < data.length; i++) {
+            data[i].obj.destroy();
+            PLAYER_ENTITIES[playerID].onHit();
+          }
         });
+
       }
     }
 }

@@ -15,6 +15,7 @@ function mainGame(gameData){
   //Add client event listeners
   handlePlayerInput();
 
+
   //updateNonEventCausedPlayerMovement();
   socket.on('playerMovement', function(data){
     updatePlayerPositions(data);
@@ -25,8 +26,11 @@ function mainGame(gameData){
   });
 
   socket.on('playerClicked', function(data){
-      console.log(data.playerID + " Fired weapon");
       PLAYER_ENTITIES[data.playerID].fireWeaponAt(data.x, data.y);
+  });
+
+  socket.on('playerHit', function(data){
+    PLAYER_ENTITIES[data.playerID].takeDamage(data.health);
   });
 
 }

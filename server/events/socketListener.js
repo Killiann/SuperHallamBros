@@ -65,4 +65,14 @@ exports.eventListener = (socket, socketList, playerData) => {
   socket.on('playerShooting', (data) => {
     playerData[identity].setCanShoot(data.canShoot);
   });
+
+  socket.on('playerHit', () => {
+    playerData[identity].takeDamage();
+    socketSending.sendToAllSockets(socketList, 'playerHit', {playerID: playerData[identity].id, health: playerData[identity].health});
+
+    if (playerData[identity].health == 0){
+      socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: playerData[identity].id});
+    }
+
+  });
 }
