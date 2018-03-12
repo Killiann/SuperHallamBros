@@ -4,7 +4,7 @@
   "description": "An online game built for web browsers with Javscript. Super Smash brothers style gameplay. Gonna be hard af to make but it's for a uni project. ",
   "main": "app.js",
   "scripts": {
-    "test": "run"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",

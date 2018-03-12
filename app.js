@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/game.html');
 });
 
-serv.listen(1337);
+serv.listen(8080);
 
 socket.sockets.on('connection', (socket, data) => {
     socketEvents.join(socket, SOCKET_LIST);
