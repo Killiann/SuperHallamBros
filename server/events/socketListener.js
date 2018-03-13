@@ -68,19 +68,27 @@ exports.eventListener = (socket, socketList, playerData) => {
 
   socket.on('playerHit', (data) => {
     let p = playerData[data.playerID];
-    let health = p.health;
-    let pMortal = p.mortal;
-    console.log("Player with id " + p.id + " has just been hit, has currently got health " + health + " and mortal value: " + pMortal);
-    if (pMortal && health != 0) {
-      p.takeDamage();
-      socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health});
+    if (p != null) {
+      let health = p.health;
+      let pMortal = p.mortal;
+      console.log("Player with id " + p.id + " has just been hit, has currently got health " + health + " and mortal value: " + pMortal);
+      if (pMortal && health != 0) {
+        p.takeDamage();
+        socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health});
+      }
+      if(pMortal && health == 1){
+        delete socketList[data.playerID];
+        delete playerData[data.playerID];
+        socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: data.playerID});
+      }
     }
-    if(pMortal && health == 1){
-      socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: data.playerID});
-    }
+
 
   });
   socket.on('playerMortal', (data) => {
-      playerData[data.playerID].mortal = true;
+    if (playerData[data.playerID] != null) {
+        playerData[data.playerID].mortal = true;
+    }
+
   });
 }

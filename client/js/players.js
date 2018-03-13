@@ -27,6 +27,7 @@ function Character(id, characterID, nickName, playerDetails){
       this.nick = nickName;
       this.weaponData = classDetails[this.char - 1];
       this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200).ignoreHits(id + '_projectile');
+      this.dead = false;
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
       var playerTag = Crafty.e('2D, DOM, Text').text(this.nick + this.id).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
@@ -97,6 +98,8 @@ function Character(id, characterID, nickName, playerDetails){
 
       this.die = function(){
         this.entity.destroy();
+        this.dead = true;
+        checkForGameOver();
       }
 
       //collsion stuff

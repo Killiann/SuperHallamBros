@@ -38,6 +38,31 @@ function mainGame(gameData){
 
 }
 
+function checkForGameOver(){
+  var alive = 0;
+  var lastID;
+    for (var winner in PLAYER_ENTITIES) {
+      if (PLAYER_ENTITIES.hasOwnProperty(winner)) {
+        if (PLAYER_ENTITIES[winner].dead == false) {
+          alive++;
+          lastEntity = PLAYER_ENTITIES[winner];
+        }
+      }
+    }
+    if (alive == 1) {
+      console.log("Game over. The winner is " + lastEntity.nick + " with id: " + lastEntity.id);
+      gameOver();
+    }
+
+}
+
+function gameOver(){
+  //Timer here 
+  socket.emit('leave');
+  location.reload(true);
+}
+
+
 //do we really need this? we'll fnd out in the future
 function updateNonEventCausedPlayerMovement(){
   setInterval(function(){
