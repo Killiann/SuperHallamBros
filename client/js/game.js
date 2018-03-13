@@ -30,7 +30,10 @@ function mainGame(gameData){
   });
 
   socket.on('playerConfirmHit', function(data){
-    PLAYER_ENTITIES[data.playerID].takeDamage(data.health);
+    PLAYER_ENTITIES[data.playerID].onDamage(data.health);
+  });
+  socket.on('playerDead', function(data){
+    PLAYER_ENTITIES[data.playerID].die();
   });
 
 }

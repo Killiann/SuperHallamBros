@@ -66,15 +66,21 @@ exports.eventListener = (socket, socketList, playerData) => {
     playerData[identity].setCanShoot(data.canShoot);
   });
 
-  socket.on('playerHit', () => {
-    if (playerData[identity].health != 1 && playerData[identity].mortal == true) {
-      playerData[identity].takeDamage();
-      socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: playerData[identity].id, health: playerData[identity].health});
-    }else if(playerData[identity].mortal == true){
-      socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: playerData[identity].id});
+  socket.on('playerHit', (data) => {
+    let p = playerData[data.playerID];
+    let health = p.health;
+    let pMortal = p.mortal;
+    console.log("Player with id " + p.id + " has just been hit, has currently got health " + health + " and mortal value: " + pMortal);
+    if (pMortal && health != 0) {
+      p.takeDamage();
+      socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health});
     }
+    if(pMortal && health == 1){
+      socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: data.playerID});
+    }
+
   });
-  socket.on('playerMortal', () => {
-      playerDetails[identity].mortal = true;
+  socket.on('playerMortal', (data) => {
+      playerData[data.playerID].mortal = true;
   });
 }

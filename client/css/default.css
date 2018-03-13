@@ -126,3 +126,10 @@ button:hover {
   text-align: center;
   margin: auto;
 }
+
+.heartName {
+  font-family: 'Bangers', cursive;
+  font-size: 1.2em;
+  color: rgb(242, 242, 242);
+  position: fixed;
+}

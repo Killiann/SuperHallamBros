@@ -26,10 +26,10 @@ function Character(id, characterID, nickName, playerDetails){
       this.char = characterID;
       this.nick = nickName;
       this.weaponData = classDetails[this.char - 1];
-      this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200);
+      this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200).ignoreHits(id + '_projectile');
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
-      var playerTag = Crafty.e('2D, DOM, Text').text(this.nick).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
+      var playerTag = Crafty.e('2D, DOM, Text').text(this.nick + this.id).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
       playerBackground.attach(playerTag);
       this.entity.attach(playerBackground);
 
@@ -73,7 +73,7 @@ function Character(id, characterID, nickName, playerDetails){
         }, weapon.fireRate);
 
         //create projectile
-        var projectile = Crafty.e(this.id + '_projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
+        var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
 
         //Shoot it
         projectile.vx = dx;
@@ -84,36 +84,32 @@ function Character(id, characterID, nickName, playerDetails){
           projectile.destroy();
         }, 10000);
       }
-      this.onHit = function(){
-        socket.emit('playerHit');
-      }
       this.onDamage = function(health){
-        var flash = setInterval(function(){
-            this.entity.color('rgb(222, 113, 59)');
-            setTimeout(function(){
-              this.entity.color('rgb(78, 78, 78)');
-            },150);
-        }, 300);
-
+        this.healthUI.updateBar(health);
+        this.entity.color('rgba(78, 78, 78, 0.2)');
+        var that = this;
         setTimeout(function(){
-          clearInterval(flash);
-          this.entity.color('rgb(78, 78, 78)');
-          socket.emit('playerMortal');
+          that.entity.color('rgba(78, 78, 78, 1.0)');
+          socket.emit('playerMortal', {playerID: that.id});
         }, 1500);
 
-        this.healthUI.updateBar(health);
       }
 
-      //collsion stugg
-      this.entity.ignoreHits(id + '_projectile'); //This doesn't seem to have an effect.
+      this.die = function(){
+        this.entity.destroy();
+      }
+
+      //collsion stuff
 
       for (var key in playerDetails) {
-        if (playerDetails.hasOwnProperty(key) && key != id) {
 
+        if (playerDetails.hasOwnProperty(key) && key != id) {
+          //console.log("Adding hit detection for " + id + " \n on hit with " + key);
             this.entity.onHit(key + '_projectile', function(data){
 
-                console.log("Player with id:\n" + key + " just hit player with id: \n" + id);
-                this.onHit();
+              //  console.log("Player with id:\n" + key + " just hit player with id: \n" + id);
+
+                socket.emit('playerHit', {playerID: id});
                 data[0].obj.destroy();
 
             });
