@@ -29,7 +29,7 @@ function mainGame(gameData){
       PLAYER_ENTITIES[data.playerID].fireWeaponAt(data.x, data.y);
   });
 
-  socket.on('playerHit', function(data){
+  socket.on('playerConfirmHit', function(data){
     PLAYER_ENTITIES[data.playerID].takeDamage(data.health);
   });
 

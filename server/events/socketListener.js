@@ -67,12 +67,14 @@ exports.eventListener = (socket, socketList, playerData) => {
   });
 
   socket.on('playerHit', () => {
-    playerData[identity].takeDamage();
-    socketSending.sendToAllSockets(socketList, 'playerHit', {playerID: playerData[identity].id, health: playerData[identity].health});
-
-    if (playerData[identity].health == 0){
+    if (playerData[identity].health != 1 && playerData[identity].mortal == true) {
+      playerData[identity].takeDamage();
+      socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: playerData[identity].id, health: playerData[identity].health});
+    }else if(playerData[identity].mortal == true){
       socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: playerData[identity].id});
     }
-
+  });
+  socket.on('playerMortal', () => {
+      playerDetails[identity].mortal = true;
   });
 }

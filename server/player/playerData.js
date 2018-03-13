@@ -13,7 +13,8 @@ exports.Player = (id, name, charID, nickName) => {
     friction: 0.3,
     maxVelocityX: 6,
     canShoot: true,
-    health: 3
+    health: 3,
+    mortal: true
   }
   self.updatePos = () => {
     if(self.ctrlRight && self.velocityX <= self.maxVelocityX){
@@ -39,6 +40,7 @@ exports.Player = (id, name, charID, nickName) => {
     self.canShoot = value;
   }
   self.takeDamage = () => {
+    self.mortal = false;
     if (self.health != 0) {
       self.health--;
       if (self.health == 0) {

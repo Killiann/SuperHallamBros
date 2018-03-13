@@ -28,17 +28,13 @@ function Character(id, characterID, nickName, playerDetails){
       this.weaponData = classDetails[this.char - 1];
       this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200);
 
-      //collsion stugg
-      this.entity.ignoreHits(this.id + "_projectile"); //This doesn't seem to have an effect.
-      addProjectileCollisions(this.entity, playerDetails, this.id);
-
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
       var playerTag = Crafty.e('2D, DOM, Text').text(this.nick).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
       playerBackground.attach(playerTag);
       this.entity.attach(playerBackground);
 
       //create health bar
-      var healthUI = new healthBar(this.id, this.nick);
+      this.healthUI = new healthBar(this.id, this.nick);
 
       this.setColour = function(colour){
         this.entity.color(colour);
@@ -91,9 +87,38 @@ function Character(id, characterID, nickName, playerDetails){
       this.onHit = function(){
         socket.emit('playerHit');
       }
-      this.takeDamage = function(health){
-        healthUI.updateBar(health);
+      this.onDamage = function(health){
+        var flash = setInterval(function(){
+            this.entity.color('rgb(222, 113, 59)');
+            setTimeout(function(){
+              this.entity.color('rgb(78, 78, 78)');
+            },150);
+        }, 300);
+
+        setTimeout(function(){
+          clearInterval(flash);
+          this.entity.color('rgb(78, 78, 78)');
+          socket.emit('playerMortal');
+        }, 1500);
+
+        this.healthUI.updateBar(health);
       }
+
+      //collsion stugg
+      this.entity.ignoreHits(id + '_projectile'); //This doesn't seem to have an effect.
+
+      for (var key in playerDetails) {
+        if (playerDetails.hasOwnProperty(key) && key != id) {
+
+            this.entity.onHit(key + '_projectile', function(data){
+
+                console.log("Player with id:\n" + key + " just hit player with id: \n" + id);
+                this.onHit();
+                data[0].obj.destroy();
+
+            });
+          }
+        }
 }
 
 function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileImage){
@@ -103,19 +128,4 @@ function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileIm
   this.fireRate = fireRate;
   this.fireDrawback = fireDrawback;
   this.image = projectileImage;
-}
-
-function addProjectileCollisions(entity, playerDetails, playerID){
-    for (var key in playerDetails) {
-      if (playerDetails.hasOwnProperty(key) && key != playerID) {
-
-        entity.onHit(key + '_projectile', function(data){
-          for (var i = 0; i < data.length; i++) {
-            data[i].obj.destroy();
-            PLAYER_ENTITIES[playerID].onHit();
-          }
-        });
-
-      }
-    }
 }
