@@ -77,18 +77,20 @@ exports.eventListener = (socket, socketList, playerData) => {
         socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health});
       }
       if(pMortal && health == 1){
-        delete socketList[data.playerID];
-        delete playerData[data.playerID];
         socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: data.playerID});
       }
     }
 
 
   });
+
   socket.on('playerMortal', (data) => {
     if (playerData[data.playerID] != null) {
         playerData[data.playerID].mortal = true;
     }
+  });
 
+  socket.on('gameOver', (data) => {
+    socketSending.sendToAllSockets(socketList, 'EndGame', {winnerID: data.winnerID});
   });
 }

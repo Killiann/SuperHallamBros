@@ -32,8 +32,13 @@ function mainGame(gameData){
   socket.on('playerConfirmHit', function(data){
     PLAYER_ENTITIES[data.playerID].onDamage(data.health);
   });
+
   socket.on('playerDead', function(data){
     PLAYER_ENTITIES[data.playerID].die();
+  });
+
+  socket.on('EndGame', function(data){
+    gameOver(data.winnerID);
   });
 
 }
@@ -51,15 +56,46 @@ function checkForGameOver(){
     }
     if (alive == 1) {
       console.log("Game over. The winner is " + lastEntity.nick + " with id: " + lastEntity.id);
-      gameOver();
+      socket.emit('gameOver', {winnerID: lastEntity.id});
     }
 
 }
 
-function gameOver(){
-  //Timer here 
-  socket.emit('leave');
-  location.reload(true);
+function gameOver(winnerID){
+
+  if(document.getElementById("endGameElement") === null){
+    $('#game').animate({
+      position: 'absolute',
+      opacity: 0.0,
+      'margin-top': '-60%'
+    }, 1500, function(){
+        this.remove();
+    });
+
+    //End game ui
+    var holder = $('<div></div>').attr({id: 'endGameElement'}).addClass('EndGameHolder');
+    var logo = $('<img>').attr({src: 'client/res/img/logo.png', height: '200px'});
+    var winnerName = $('<p></p>').text('Congrats ' + PLAYER_ENTITIES[winnerID].nick + '!').addClass('title');
+    var counter = $('<p></p>').text('Game restarting in ' + 5).attr({id: 'endCounter'}).addClass('counter');
+    $(holder).append(logo, winnerName, counter);
+    $('body').append(holder);
+
+    $(holder).animate({
+      'margin-top': '0',
+      opacity: 1.0
+    }, 1000);
+
+    //Timer here
+    let secs = 15;
+    setInterval(function(){
+      secs--;
+      $(counter).text('Game restarting in ' + secs);
+      if (secs == 0) {
+          location.reload(true);
+      }
+    }, 1000);
+  }
+
 }
 
 
