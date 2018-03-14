@@ -14,7 +14,9 @@ exports.Player = (id, name, charID, nickName) => {
     maxVelocityX: 6,
     canShoot: true,
     health: 3,
-    mortal: true
+    mortal: true,
+    mouseX: 0,
+    mouseY: 0
   }
   self.updatePos = () => {
     if(self.ctrlRight && self.velocityX <= self.maxVelocityX){
@@ -47,6 +49,10 @@ exports.Player = (id, name, charID, nickName) => {
         self.die();
       }
     }
+  }
+  self.setMousePos = (x, y) => {
+    self.mouseX = x;
+    self.mouseY = y;
   }
   self.die = () => {
     console.log("Player " + self.id + " died.");

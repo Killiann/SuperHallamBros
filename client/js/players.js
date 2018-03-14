@@ -26,8 +26,18 @@ function Character(id, characterID, nickName, playerDetails){
       this.char = characterID;
       this.nick = nickName;
       this.weaponData = classDetails[this.char - 1];
-      this.entity = Crafty.e(this.id + ', 2D, Canvas, Gravity, Color, Motion, Collision').color('rgb(78, 78, 78)').gravity('Ground').attr({h: 80, w:50}).gravityConst(1200).ignoreHits(id + '_projectile');
+      this.entity =
+      Crafty.e(this.id + ', 2D, Canvas, walker_start, SpriteAnimation, Gravity, Motion, Collision')
+      .gravity('Ground')
+      .attr({h: 80, w:50})
+      .gravityConst(1200)
+      .ignoreHits(id + '_projectile')
+      .reel("walkingRight", 500, [[0, 0], [1, 0], [2, 0], [3, 0],[0, 1], [1, 1]])
+      .reel("walkingLeft", 500, [[3,2], [2,2], [1, 2], [0, 2], [3,3], [2,3]]);
       this.dead = false;
+      this.walkingRightAni = false;
+      this.walkingLeftAni = false;
+      this.jumpingAni = false;
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
       var playerTag = Crafty.e('2D, DOM, Text').text(this.nick + this.id).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
@@ -40,7 +50,21 @@ function Character(id, characterID, nickName, playerDetails){
       this.setColour = function(colour){
         this.entity.color(colour);
       }
-      this.updateX = function(x){
+      this.updateX = function(x, mouseX){
+        var that = this;
+        if (mouseX > x && this.walkingRightAni == false) {
+          this.walkingRightAni = true;
+          this.entity.animate("walkingRight", 1);
+          setTimeout(function(){
+            that.walkingRightAni = false;
+          }, 500);
+        }else if (this.walkingLeftAni == false) {
+          this.walkingLeftAni = true;
+          this.entity.animate("walkingLeft", 1);
+          setTimeout(function(){
+            that.walkingLeftAni = false;
+          }, 500);
+        }
         this.entity.attr({x: x});
       }
       this.updateY = function(y){
@@ -87,10 +111,19 @@ function Character(id, characterID, nickName, playerDetails){
       }
       this.onDamage = function(health){
         this.healthUI.updateBar(health);
-        this.entity.color('rgba(78, 78, 78, 0.2)');
+        this.entity.alpha = 0.5;
         var that = this;
+
+        var flash = setInterval(function(){
+          that.entity.alpha = 1.0;
+          var dash = setTimeout(function(){
+            that.entity.alpha = 0.5;
+          }, 250);
+        }, 600);
+
         setTimeout(function(){
-          that.entity.color('rgba(78, 78, 78, 1.0)');
+          clearInterval(flash);
+          that.entity.alpha = 1.0;
           socket.emit('playerMortal', {playerID: that.id});
         }, 1500);
 

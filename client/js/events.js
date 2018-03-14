@@ -1,6 +1,7 @@
 function handlePlayerInput(){
   addPlayerMovementDetection();
   addPlayerClickDetection();
+  updateMousePosition();
 }
 
 
@@ -31,5 +32,14 @@ let addPlayerClickDetection = function(){
     var y = event.clientY;
     // console.log("client click x:" + x + " y:" + y) ;
     socket.emit('playerClick', {x: x, y: y});
+  }
+}
+
+let updateMousePosition = function(){
+  var game = document.getElementById('game');
+  game.onmousemove = function(event){
+    PLAYER_MOUSE.x = event.clientX;
+    PLAYER_MOUSE.y = event.clientY;
+    socket.emit('mousePosition', {x: event.clientX, y: event.clientY});
   }
 }

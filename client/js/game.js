@@ -1,4 +1,16 @@
 let PLAYER_ENTITIES = [];
+let PLAYER_MOUSE = {x: 0, y: 0};
+
+//all image resources we preload and then add players once they're loaded
+var sprites = {"sprites": {
+  "client/res/img/tempPlayer.png" : {
+    "tile": 80,
+    "tileh": 100,
+    "map": { "walker_start": [0,0]}
+  }
+}};
+
+
 
 //main needs to be organsied
 function mainGame(gameData){
@@ -9,36 +21,38 @@ function mainGame(gameData){
   //Init map Here
   mapGenerator();
 
-  //Init all player entities
-  addPlayers(gameData.playerData);
+  //Init all player entities once all sprites are loaded
+  Crafty.load(sprites, function(){
 
-  //Add client event listeners
-  handlePlayerInput();
+    addPlayers(gameData.playerData);
+    //Add client event listeners
+    handlePlayerInput();
 
+    //updateNonEventCausedPlayerMovement();
+    socket.on('playerMovement', function(data){
+      updatePlayerPositions(data);
+    });
 
-  //updateNonEventCausedPlayerMovement();
-  socket.on('playerMovement', function(data){
-    updatePlayerPositions(data);
-  });
+    socket.on('playerJumper', function(data){
+        PLAYER_ENTITIES[data.playerID].jump();
+    });
 
-  socket.on('playerJumper', function(data){
-      PLAYER_ENTITIES[data.playerID].jump();
-  });
+    socket.on('playerClicked', function(data){
+        PLAYER_ENTITIES[data.playerID].fireWeaponAt(data.x, data.y);
+    });
 
-  socket.on('playerClicked', function(data){
-      PLAYER_ENTITIES[data.playerID].fireWeaponAt(data.x, data.y);
-  });
+    socket.on('playerConfirmHit', function(data){
+      PLAYER_ENTITIES[data.playerID].onDamage(data.health);
+    });
 
-  socket.on('playerConfirmHit', function(data){
-    PLAYER_ENTITIES[data.playerID].onDamage(data.health);
-  });
+    socket.on('playerDead', function(data){
+      PLAYER_ENTITIES[data.playerID].die();
+    });
 
-  socket.on('playerDead', function(data){
-    PLAYER_ENTITIES[data.playerID].die();
-  });
+    socket.on('EndGame', function(data){
+      gameOver(data.winnerID);
+    });
 
-  socket.on('EndGame', function(data){
-    gameOver(data.winnerID);
   });
 
 }
@@ -116,7 +130,7 @@ function updateNonEventCausedPlayerMovement(){
 function updatePlayerPositions(playerData){
     for (var player in playerData) {
       if (playerData.hasOwnProperty(player)) {
-        PLAYER_ENTITIES[player].updateX(playerData[player].x);
+        PLAYER_ENTITIES[player].updateX(playerData[player].x, playerData[player].mouseX);
       }
     }
 }

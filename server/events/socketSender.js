@@ -29,7 +29,7 @@ exports.sendPerTick = (playerData, socketData) => {
       if (playerData.hasOwnProperty(i)) {
         var player = playerData[i];
         player.updatePos();
-        playerPacket[player.id] = {x:player.x, y: player.y};
+        playerPacket[player.id] = {x:player.x, y: player.y, mouseX: player.mouseX, mouseY: player.mouseY};
       }
     }
     for (var i in socketData) {

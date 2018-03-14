@@ -36,7 +36,7 @@ exports.eventListener = (socket, socketList, playerData) => {
     if (data.inputID === 'right'){
         player.ctrlRight = data.state;
     }else if (data.inputID === 'left') {
-      player.ctrlLeft = data.state;
+        player.ctrlLeft = data.state;
     }
 
   });
@@ -53,6 +53,10 @@ exports.eventListener = (socket, socketList, playerData) => {
         p.y = data[player].y;
       }
     }
+  });
+
+  socket.on('mousePosition', (data) => {
+    playerData[identity].setMousePos(data.x, data.y);
   });
 
   socket.on('playerClick', (data) => {
