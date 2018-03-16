@@ -29,11 +29,13 @@ function Character(id, characterID, nickName, playerDetails){
       this.entity =
       Crafty.e(this.id + ', 2D, Canvas, walker_start, SpriteAnimation, Gravity, Motion, Collision')
       .gravity('Ground')
-      .attr({h: 80, w:50})
+      .attr({h: 40, w:25})
       .gravityConst(1200)
       .ignoreHits(id + '_projectile')
       .reel("walkingRight", 500, [[0, 0], [1, 0], [2, 0], [3, 0],[0, 1], [1, 1]])
-      .reel("walkingLeft", 500, [[3,2], [2,2], [1, 2], [0, 2], [3,3], [2,3]]);
+      .reel("walkingLeft", 500, [[3,2], [2,2], [1, 2], [0, 2], [3,3], [2,3]])
+      .reel("staticRight", 1, [[0,0]])
+      .reel("staticLeft", 1, [[3,2]]);
       this.dead = false;
       this.walkingRightAni = false;
       this.walkingLeftAni = false;
@@ -52,17 +54,21 @@ function Character(id, characterID, nickName, playerDetails){
       }
       this.updateX = function(x, mouseX){
         var that = this;
-        if (mouseX > x && this.walkingRightAni == false) {
-          this.walkingRightAni = true;
+        if (mouseX > x && x == this.entity.attr().x) {
+          this.entity.animate("staticRight", 1);
+        }else if(x == this.entity.attr().x && x > mouseX){
+          this.entity.animate("staticLeft", 1);
+        }else if (mouseX > x && x != this.entity.attr().x) {
+          //this.walkingRightAni = true;
           this.entity.animate("walkingRight", 1);
           setTimeout(function(){
-            that.walkingRightAni = false;
+            //that.walkingRightAni = false;
           }, 500);
-        }else if (this.walkingLeftAni == false) {
-          this.walkingLeftAni = true;
+        }else if (x != this.entity.attr().x && x > mouseX) {
+          //this.walkingLeftAni = true;
           this.entity.animate("walkingLeft", 1);
           setTimeout(function(){
-            that.walkingLeftAni = false;
+            //that.walkingLeftAni = false;
           }, 500);
         }
         this.entity.attr({x: x});
