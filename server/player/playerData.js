@@ -37,6 +37,7 @@ exports.Player = (id, name, charID, nickName) => {
       }
     }
     self.x += self.velocityX;
+
   }
   self.setCanShoot = (value) => {
     self.canShoot = value;
