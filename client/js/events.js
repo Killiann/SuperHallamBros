@@ -26,10 +26,11 @@ let addPlayerMovementDetection = function(){
 
 let addPlayerClickDetection = function(){
   var game = document.getElementById('game');
+  var rect = game.getBoundingClientRect();
   game.onclick = function(event){
-
-    var x = event.clientX;
+    var x = event.clientX - rect.left;
     var y = event.clientY;
+
     // console.log("client click x:" + x + " y:" + y) ;
     socket.emit('playerClick', {x: x, y: y});
   }
@@ -37,9 +38,10 @@ let addPlayerClickDetection = function(){
 
 let updateMousePosition = function(){
   var game = document.getElementById('game');
+  var rect = game.getBoundingClientRect();
   game.onmousemove = function(event){
-    PLAYER_MOUSE.x = event.clientX;
+    PLAYER_MOUSE.x = event.clientX - rect.left;
     PLAYER_MOUSE.y = event.clientY;
-    socket.emit('mousePosition', {x: event.clientX, y: event.clientY});
+    socket.emit('mousePosition', {x: PLAYER_MOUSE.x, y: event.clientY});
   }
 }

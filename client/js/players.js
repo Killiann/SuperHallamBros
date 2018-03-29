@@ -14,10 +14,10 @@ function addPlayers(playerDetails){
 }
 
 //Class weapon attributes
-var memetClass = new weaponClass(75, 8, 10, 0, 1.1, 'rgb(237, 237, 237)');
-var pascalClass = new weaponClass(15, 5, 5, 75, 1, 'rgb(38, 38, 38)');
-var mikeClass = new weaponClass(5, 3, 0, 50, 1, 'rgb(208, 20, 144)');
-var nannyClass = new weaponClass(15, 8, 5, 75, 1, 'rgb(204, 15, 15)');
+var memetClass = new weaponClass(75, 600, 10, 0, 1.1, 'rgb(237, 237, 237)');
+var pascalClass = new weaponClass(15, 400, 5, 75, 1, 'rgb(38, 38, 38)');
+var mikeClass = new weaponClass(5, 3, 200, 50, 1, 'rgb(208, 20, 144)');
+var nannyClass = new weaponClass(15, 800, 5, 75, 1, 'rgb(204, 15, 15)');
 
 var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
 
@@ -100,8 +100,20 @@ function Character(id, characterID, nickName, playerDetails){
         //Click positions
         var x1 = this.getX();
         var y1 = this.getY();
-        var dy = y - y1;
-        var dx = x - x1;
+        var speed = 200;
+        var length = Math.sqrt((x - x1)*(x - x1) + (y - y1)*(y - y1));
+
+        //create projectile
+        var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
+
+        //Shoot it
+        projectile.vx = (x - x1) /length * weapon.speed;
+        projectile.vy = (y - y1) /length * weapon.speed;
+
+        console.log(x);
+        console.log(x1);
+        console.log(y);
+        console.log(y1);
 
         //Fire Rate - here we send data to the server soket telling it that the client has is about to shoot.
         //We will disable shooting on he server side of the player. Then we set a timer as long as their firerate is to
@@ -110,13 +122,6 @@ function Character(id, characterID, nickName, playerDetails){
         setTimeout(function(){
           socket.emit('playerShooting', {canShoot: true});
         }, weapon.fireRate);
-
-        //create projectile
-        var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
-
-        //Shoot it
-        projectile.vx = dx;
-        projectile.vy = dy;
 
         //Despawn after this timer
         setTimeout(function(){

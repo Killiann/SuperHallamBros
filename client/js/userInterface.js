@@ -4,15 +4,22 @@ function healthBar(id, nickName){
   this.hearts = [];
 
   var userName = $('<p></p>').text(this.name).addClass('heartName');
-  var heartHolder = $('<div></div>').attr({id: this.barID}).css({'float': 'left', 'margin' : '10px'}); //can we design a css class for the hearts please.
+  var heartHolder = $('<div></div>').attr({id: this.barID}).css({'margin' : '10px', 'position' : 'fixed'}); //can we design a css class for the hearts please.
   $(heartHolder).append(userName);
 
   for (var i = 0; i < 3; i++){
-    this.hearts[i] = $('<img>').attr({src: 'client/res/img/fullHeart.png', width: 30, height: 30, id: this.barID + '_healthIcon_' + i});
-    $(heartHolder).append(this.hearts[i]);
+    var that = this;
+
+    (function(i){
+      var a = i;
+      that.hearts[a] = $('<img>').attr({src: 'client/res/img/fullHeart.png', width: 30, height: 30, id: that.barID + '_healthIcon_' + a});
+      $(heartHolder).css({'top' : '10px', 'left' : 100*a + 'px'});
+      $(heartHolder).append(that.hearts[a]);
+    }).call(this, i);
+
   }
 
-  $('body').prepend(heartHolder);
+  $('body').append(heartHolder);
 
   this.updateBar = function(health){
     var emptyHearts = 3 - health;
