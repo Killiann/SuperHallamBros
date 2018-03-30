@@ -17,6 +17,8 @@ function mainGame(gameData){
 
   //Init game scene
   Crafty.init(720, 720, document.getElementById('game'));
+  $('#game').addClass('gameGo');
+  $('body').prepend($('<div></div>').attr({id: 'UI'}));
 
   //Init map Here
   mapGenerator();

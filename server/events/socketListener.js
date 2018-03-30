@@ -42,7 +42,7 @@ exports.eventListener = (socket, socketList, playerData) => {
   });
 
   socket.on('movementJump', (data) => {
-    socketSending.sendToAllSockets(socketList, 'playerJumper', {playerID: playerData[identity].id});
+      socketSending.sendToAllSockets(socketList, 'playerJumper', {playerID: playerData[identity].id});
   });
 
   socket.on('nonEventPlayerMovement', (data) => {
@@ -77,15 +77,20 @@ exports.eventListener = (socket, socketList, playerData) => {
       let pMortal = p.mortal;
       console.log("Player with id " + p.id + " has just been hit, has currently got health " + health + " and mortal value: " + pMortal);
       if (pMortal && health != 0) {
-        p.takeDamage();
+        p.takeDamage(1);
         socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health});
       }
       if(pMortal && health == 1){
         socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: data.playerID});
       }
     }
+  });
 
-
+  socket.on('playerLeftMap', (data) => {
+      let p = playerData[data.playerID];
+      p.takeDamage(playerData[data.playerID].health);
+      socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health}); //make sure hearts die.
+      socketSending.sendToAllSockets(socketList, 'playerDead', {playerID: data.playerID});
   });
 
   socket.on('playerMortal', (data) => {

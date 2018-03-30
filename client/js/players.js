@@ -16,7 +16,7 @@ function addPlayers(playerDetails){
 //Class weapon attributes
 var memetClass = new weaponClass(75, 600, 10, 0, 1.1, 'rgb(237, 237, 237)');
 var pascalClass = new weaponClass(15, 400, 5, 75, 1, 'rgb(38, 38, 38)');
-var mikeClass = new weaponClass(5, 3, 200, 50, 1, 'rgb(208, 20, 144)');
+var mikeClass = new weaponClass(5, 3, 500, 50, 1, 'rgb(208, 20, 144)');
 var nannyClass = new weaponClass(15, 800, 5, 75, 1, 'rgb(204, 15, 15)');
 
 var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
@@ -40,6 +40,8 @@ function Character(id, characterID, nickName, playerDetails){
       this.walkingRightAni = false;
       this.walkingLeftAni = false;
       this.jumpingAni = false;
+      this.jumping = 0;
+      this.maxJump = 2;
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
       var playerTag = Crafty.e('2D, DOM, Text').text(this.nick + this.id).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
@@ -73,16 +75,16 @@ function Character(id, characterID, nickName, playerDetails){
         }else if(x == this.entity.attr().x && x > mouseX && this.walkingLeftAni == false){
           this.entity.animate("staticLeft", 1);
         }
+        if (this.dead == false) {
+          if (this.entity.attr().x > 720 || this.entity.attr().x < 0 || this.entity.attr().y > 720) {
+            socket.emit('playerLeftMap', {playerID:this.id});
+          }
+        }
 
         this.entity.attr({x: x});
       }
       this.updateY = function(y){
-        if (y > 720) {
-          this.entity.attr({y: -100});
-        }else {
           this.entity.attr({y: y});
-        }
-
       }
       this.getX = function(){
         return this.entity.attr().x;
@@ -91,42 +93,53 @@ function Character(id, characterID, nickName, playerDetails){
         return this.entity.attr().y;
       }
       this.jump = function(){
-        this.entity.velocity().y -= 300;
+        if (this.entity.vy == 0) {
+          this.jumping = 0;
+        }
+        if (this.jumping < this.maxJump) {
+            this.entity.velocity().y -= 400;
+            this.jumping += 1;
+        }
+
       }
       this.fireWeaponAt = function(x, y){
+        if (this.dead == false) {
+          var weapon = this.weaponData;
 
-        var weapon = this.weaponData;
+          //Click positions
+          var x1 = this.getX();
+          var y1 = this.getY();
+          var speed = 200;
+          var length = Math.sqrt((x - x1)*(x - x1) + (y - y1)*(y - y1));
 
-        //Click positions
-        var x1 = this.getX();
-        var y1 = this.getY();
-        var speed = 200;
-        var length = Math.sqrt((x - x1)*(x - x1) + (y - y1)*(y - y1));
+          //create projectile
+          var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, Color, Motion, Collision').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
 
-        //create projectile
-        var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, Color, Motion').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
+          //Shoot it
+          projectile.vx = (x - x1) /length * weapon.speed;
+          projectile.vy = (y - y1) /length * weapon.speed;
 
-        //Shoot it
-        projectile.vx = (x - x1) /length * weapon.speed;
-        projectile.vy = (y - y1) /length * weapon.speed;
+          //Collision with surfaces
+          projectile.onHit('Ground', function(data){
+            this.destroy();
+            data[0].obj.destroy();
+            createBreakParticle(data[0].obj.attr().x, data[0].obj.attr().y);
+          });
 
-        console.log(x);
-        console.log(x1);
-        console.log(y);
-        console.log(y1);
+          //Fire Rate - here we send data to the server soket telling it that the client has is about to shoot.
+          //We will disable shooting on he server side of the player. Then we set a timer as long as their firerate is to
+          //then allow them to shoot again once the timer is up.
+          socket.emit('playerShooting', {canShoot: false});
+          setTimeout(function(){
+            socket.emit('playerShooting', {canShoot: true});
+          }, weapon.fireRate);
 
-        //Fire Rate - here we send data to the server soket telling it that the client has is about to shoot.
-        //We will disable shooting on he server side of the player. Then we set a timer as long as their firerate is to
-        //then allow them to shoot again once the timer is up.
-        socket.emit('playerShooting', {canShoot: false});
-        setTimeout(function(){
-          socket.emit('playerShooting', {canShoot: true});
-        }, weapon.fireRate);
+          //Despawn after this timer
+          setTimeout(function(){
+            projectile.destroy();
+          }, 10000);
+        }
 
-        //Despawn after this timer
-        setTimeout(function(){
-          projectile.destroy();
-        }, 10000);
       }
       this.onDamage = function(health){
         this.healthUI.updateBar(health);
@@ -149,6 +162,7 @@ function Character(id, characterID, nickName, playerDetails){
       }
 
       this.die = function(){
+        createDeathParticle(this.getX(), this.getY());
         this.entity.destroy();
         this.dead = true;
         checkForGameOver();

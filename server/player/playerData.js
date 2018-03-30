@@ -42,7 +42,7 @@ exports.Player = (id, name, charID, nickName) => {
   self.setCanShoot = (value) => {
     self.canShoot = value;
   }
-  self.takeDamage = () => {
+  self.takeDamage = (amount) => {
     self.mortal = false;
     if (self.health != 0) {
       self.health--;
