@@ -19,6 +19,9 @@ var pascalClass = new weaponClass(15, 400, 5, 75, 1, 'rgb(38, 38, 38)');
 var mikeClass = new weaponClass(5, 3, 500, 50, 1, 'rgb(208, 20, 144)');
 var nannyClass = new weaponClass(15, 800, 5, 75, 1, 'rgb(204, 15, 15)');
 
+//Class Sprite Sheets and states.
+//var spriteSheets = [{},{},{},{}];
+
 var classDetails = [memetClass, pascalClass, mikeClass, nannyClass];
 
 function Character(id, characterID, nickName, playerDetails){
@@ -29,7 +32,7 @@ function Character(id, characterID, nickName, playerDetails){
       this.entity =
       Crafty.e(this.id + ', 2D, Canvas, walker_start, SpriteAnimation, Gravity, Motion, Collision')
       .gravity('Ground')
-      .attr({h: 40, w:25})
+      .attr({h: 60, w:40})
       .gravityConst(1200)
       .ignoreHits(id + '_projectile')
       .reel("walkingRight", 250, [[0, 0], [1, 0], [2, 0], [3, 0],[0, 1], [1, 1]])

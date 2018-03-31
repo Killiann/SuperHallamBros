@@ -3,9 +3,9 @@ let PLAYER_MOUSE = {x: 0, y: 0};
 
 //all image resources we preload and then add players once they're loaded
 var sprites = {"sprites": {
-  "client/res/img/tempPlayer.png" : {
-    "tile": 80,
-    "tileh": 100,
+  "client/res/img/memetPlayerRun.png" : {
+    "tile": 300,
+    "tileh": 361,
     "map": { "walker_start": [0,0]}
   }
 }};
