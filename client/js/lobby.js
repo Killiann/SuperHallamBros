@@ -5,6 +5,8 @@ var gameBeginTimer;
 window.onload = function(){
   console.log("Welcome to Super Hallam Bros");
 
+  let backingImage = $('<img>').attr({src: "client/res/MemetNoShadow.png", height: "100%", id: 'splashImage1'}).css({position: 'fixed', bottom: '-10%', left: '-22%', 'z-index' : '-3', 'opacity' : '0.75'});
+  $('body, html').append(backingImage);
 }
 
 function lobbyBegin() {
@@ -22,6 +24,7 @@ function lobbyBegin() {
         let charMenu = characterMenu();
         let lobbyMenu = lobbyJoiner();
 
+        $("#splashImage1").animate({opacity: 0.05});
         $('.lobby').append(charMenu, lobbyMenu);
         $(charMenu).animate({'margin-left' : '0',opacity : 1.0});
         $(lobbyMenu).animate({'margin-left' : '0',opacity : 1.0});
