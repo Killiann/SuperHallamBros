@@ -111,7 +111,6 @@ function serverConnection(){
   if (playerSelected) {
     if (socket == null) {
       onJoin();
-      $('#joinGameID').text('Leave Server').attr({onclick: 'onDisconnect()'});
     }else {
       console.log("You're already connected");
     }
@@ -161,7 +160,23 @@ function deleteLobby(){
 function onJoin(){
   console.log("Connected to the Server.");
   socket = io();
-  socket.emit('setupPlayer', {characterName: playerInfo.charName, characterID: playerInfo.charIdentity, playerName: $('#playerNameInput').val()});
+  socket.emit('canJoin');
+  socket.on('canJoin', function(data){
+    if(data.joinable == true){
+        if($('#inProg').length > 0){
+          $('#inProg').remove();
+        }
+        $('#joinGameID').attr({hidden: true});//text('Leave Server').attr({onclick: 'onDisconnect()'});
+        socket.emit('setupPlayer', {characterName: playerInfo.charName, characterID: playerInfo.charIdentity, playerName: $('#playerNameInput').val()});
+    }else {
+      //This is a stupid check but my other simple method didnt work :()
+        if(!($('#inProg').length > 0)){
+          $("html").prepend($("<div></div>").text("People are currently playing.").attr({class: "title", id: "inProg"}));
+        }
+        onDisconnect();
+    }
+  });
+
   listenToServer();
 }
 

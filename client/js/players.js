@@ -14,10 +14,10 @@ function addPlayers(playerDetails){
 }
 
 //Class weapon attributes
-var memetClass = new weaponClass(75, 600, 10, 0, 1.1, 'rgb(237, 237, 237)');
-var pascalClass = new weaponClass(15, 400, 5, 75, 1, 'rgb(38, 38, 38)');
-var mikeClass = new weaponClass(5, 3, 500, 50, 1, 'rgb(208, 20, 144)');
-var nannyClass = new weaponClass(15, 800, 5, 75, 1, 'rgb(204, 15, 15)');
+var memetClass = new weaponClass(75, 600, 10, 0, 1.1, "projectileBall", "memet_player");
+var pascalClass = new weaponClass(15, 400, 5, 75, 1,  "projectileBall", "default_player");
+var mikeClass = new weaponClass(5, 3, 500, 50, 1,  "projectileBall", "default_player");
+var nannyClass = new weaponClass(15, 800, 5, 75, 1,  "projectileBall", "default_player");
 
 //Class Sprite Sheets and states.
 //var spriteSheets = [{},{},{},{}];
@@ -30,7 +30,7 @@ function Character(id, characterID, nickName, playerDetails){
       this.nick = nickName;
       this.weaponData = classDetails[this.char - 1];
       this.entity =
-      Crafty.e(this.id + ', 2D, Canvas, walker_start, SpriteAnimation, Gravity, Motion, Collision')
+      Crafty.e(this.id + ', 2D, Canvas, ' + this.weaponData.spriteSheet + ', SpriteAnimation, Gravity, Motion, Collision')
       .gravity('Ground')
       .attr({h: 60, w:40})
       .gravityConst(1200)
@@ -47,7 +47,7 @@ function Character(id, characterID, nickName, playerDetails){
       this.maxJump = 2;
 
       var playerBackground = Crafty.e('2D, Canvas, Color').attr({x: -15, y: -40, h:20, w:80}).color('rgb(70,70,70,0.2)');
-      var playerTag = Crafty.e('2D, DOM, Text').text(this.nick + this.id).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
+      var playerTag = Crafty.e('2D, DOM, Text').text(this.nick).attr({x: -15, y: -37, h:20, w:80}).textColor('white').textAlign('center').textFont({size: '14px', family: "Bangers"});
       playerBackground.attach(playerTag);
       this.entity.attach(playerBackground);
 
@@ -116,11 +116,14 @@ function Character(id, characterID, nickName, playerDetails){
           var length = Math.sqrt((x - x1)*(x - x1) + (y - y1)*(y - y1));
 
           //create projectile
-          var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, Color, Motion, Collision').attr({x: x1, y: y1, w: 10, h: 10}).color(weapon.image);
+          var projectile = Crafty.e(id + '_projectile, 2D, Canvas, Gravity, ' + weapon.image + ', SpriteAnimation, Motion, Collision').attr({x: x1, y: y1, w: 20, h: 20})
+          .reel("spawn_projectile", 500, [[0, 0], [1, 0], [2, 0], [3, 0]]);
 
           //Shoot it
           projectile.vx = (x - x1) /length * weapon.speed;
           projectile.vy = (y - y1) /length * weapon.speed;
+
+          projectile.animate("spawn_projectile", 1);
 
           //Collision with surfaces
           projectile.onHit('Ground', function(data){
@@ -189,11 +192,12 @@ function Character(id, characterID, nickName, playerDetails){
         }
 }
 
-function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileImage){
+function weaponClass(damage, speed, weight, fireRate, fireDrawback, projectileImage, spriteSheet){
   this.damage = damage;
   this.speed = speed;
   this.weight = weight;
   this.fireRate = fireRate;
   this.fireDrawback = fireDrawback;
   this.image = projectileImage;
+  this.spriteSheet = spriteSheet;
 }

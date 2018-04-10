@@ -6,7 +6,17 @@ var sprites = {"sprites": {
   "client/res/img/memetPlayerRun.png" : {
     "tile": 300,
     "tileh": 361,
-    "map": { "walker_start": [0,0]}
+    "map": { "memet_player": [0,0]}
+  },
+  "client/res/img/tempPlayer.png" : {
+    "tile" : 80,
+    "tileh" : 100,
+    "map" : { "default_player" : [0, 0]}
+  },
+  "client/res/img/projectileBall.png" : {
+    "tile" : 50,
+    "tileh" : 50,
+    "map" : { "projectileBall" : [0, 0]}
   }
 }};
 

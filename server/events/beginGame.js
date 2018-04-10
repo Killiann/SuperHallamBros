@@ -1,5 +1,6 @@
 const socketSending = require(__dirname + '/../../server/events/socketSender.js');
 let playerCount = 0;
+var countdown;
 
 exports.addPlayer = () => {
   playerCount++;
@@ -9,30 +10,37 @@ exports.removePlayer = () => {
   playerCount--;
 }
 
-exports.canStart = (socket, playerDetails, socketDetails) => {
-    this.addPlayer();
-    if (playerCount > 1) {
+exports.canStart = (socket, playerDetails, socketDetails, game_in_prog) => {
+  //console.log("\n " + game_in_prog.joinable + " is ??");
+    if(game_in_prog.joinable){
 
-      var countdown;
-      let lobbyTimer = 2;
+      this.addPlayer();
+      if (playerCount > 1) {
 
-      console.log("Starting Game:");
-      clearInterval(countdown);
 
-      countdown = setInterval(() => {
-        console.log("In: " + lobbyTimer);
+        let lobbyTimer = 10;
 
-        lobbyTimer--;
-        if (lobbyTimer == 0) {
-          clearInterval(countdown);
-          onGameStart(playerDetails, socketDetails);
-        };
-        if (playerCount < 2) clearInterval(countdown);
-        socketSending.sendToAllSockets(socketDetails ,'lobbyCountDown', {time: lobbyTimer});
+        console.log("Starting Game:");
+        clearInterval(countdown);
 
-      }, 1000);
+        countdown = setInterval(() => {
+          console.log("In: " + lobbyTimer);
+
+          lobbyTimer--;
+          if (lobbyTimer == 0) {
+            clearInterval(countdown);
+            onGameStart(playerDetails, socketDetails);
+            game_in_prog.joinable = false;
+          };
+          if (playerCount < 2) clearInterval(countdown);
+          socketSending.sendToAllSockets(socketDetails ,'lobbyCountDown', {time: lobbyTimer});
+
+        }, 1000);
+
+      }
 
     }
+
 }
 
 function onGameStart(playerDetails, socketDetails){

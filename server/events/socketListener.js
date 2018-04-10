@@ -8,7 +8,7 @@ exports.join = (socket, socketList) => {
   console.log("New connection on the server for socket id: " + socket.id);
 }
 
-exports.eventListener = (socket, socketList, playerData) => {
+exports.eventListener = (socket, socketList, playerData, game_in_prog) => {
   var identity = socket.id;
 
   socket.on('disconnect', () => {
@@ -21,6 +21,10 @@ exports.eventListener = (socket, socketList, playerData) => {
   //This is here to force leave from client even if still on page.
   socket.on('leave', () => {
     socket.disconnect();
+  });
+
+  socket.on('canJoin', () => {
+    socket.emit('canJoin', {joinable: game_in_prog.joinable});
   });
 
   //This is once the player joins the lbby the server is sent to here
@@ -75,7 +79,7 @@ exports.eventListener = (socket, socketList, playerData) => {
     if (p != null) {
       let health = p.health;
       let pMortal = p.mortal;
-      console.log("Player with id " + p.id + " has just been hit, has currently got health " + health + " and mortal value: " + pMortal);
+      //console.log("Player with id " + p.id + " has just been hit, has currently got health " + health + " and mortal value: " + pMortal);
       if (pMortal && health != 0) {
         p.takeDamage(1);
         socketSending.sendToAllSockets(socketList, 'playerConfirmHit', {playerID: data.playerID, health: playerData[data.playerID].health});
@@ -101,5 +105,6 @@ exports.eventListener = (socket, socketList, playerData) => {
 
   socket.on('gameOver', (data) => {
     socketSending.sendToAllSockets(socketList, 'EndGame', {winnerID: data.winnerID});
+    game_in_prog.joinable = true;
   });
 }
