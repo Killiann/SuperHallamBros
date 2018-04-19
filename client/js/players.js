@@ -16,7 +16,7 @@ function addPlayers(playerDetails){
 //Class weapon attributes
 var memetClass = new weaponClass(75, 600, 10, 0, 1.1, "projectileBall", "memet_player");
 var pascalClass = new weaponClass(15, 400, 5, 75, 1,  "projectileBall", "default_player");
-var mikeClass = new weaponClass(5, 3, 500, 50, 1,  "projectileBall", "default_player");
+var mikeClass = new weaponClass(5, 500, 5, 50, 1,  "projectileBall", "mike_player");
 var nannyClass = new weaponClass(15, 800, 5, 75, 1,  "projectileBall", "default_player");
 
 //Class Sprite Sheets and states.

@@ -8,6 +8,11 @@ var sprites = {"sprites": {
     "tileh": 361,
     "map": { "memet_player": [0,0]}
   },
+  "client/res/img/mikeComplete.png" : {
+    "tile": 300,
+    "tileh": 361,
+    "map": { "mike_player": [0,0]}
+  },
   "client/res/img/tempPlayer.png" : {
     "tile" : 80,
     "tileh" : 100,
