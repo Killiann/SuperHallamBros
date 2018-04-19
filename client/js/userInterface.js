@@ -32,3 +32,9 @@ function healthBar(id, nickName){
     }
   }
 }
+
+function createPlayerStatsBar(firerate, bulletSize, rect){
+    let x = rect.x;
+    let y = rect.y - holder.getClientBoundingRect();
+    let holder = $('<div></div>').css({'position': 'absolute'});
+}
