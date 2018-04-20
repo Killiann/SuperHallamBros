@@ -11,7 +11,7 @@ exports.Player = (id, name, charID, nickName) => {
     acceleration:0.3,
     velocityX: 0,
     friction: 0.3,
-    maxVelocityX: 6,
+    maxVelocityX: 2,
     canShoot: true,
     health: 3,
     mortal: true,

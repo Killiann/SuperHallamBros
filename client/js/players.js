@@ -15,7 +15,7 @@ function addPlayers(playerDetails){
 
 //Class weapon attributes
 var memetClass = new weaponClass(75, 600, 10, 0, 1.1, "projectileBall", "memet_player");
-var pascalClass = new weaponClass(15, 400, 5, 75, 1,  "projectileBall", "default_player");
+var pascalClass = new weaponClass(15, 400, 5, 75, 1,  "projectileBall", "pascal_player");
 var mikeClass = new weaponClass(5, 500, 5, 50, 1,  "projectileBall", "mike_player");
 var nannyClass = new weaponClass(15, 800, 5, 75, 1,  "projectileBall", "default_player");
 
@@ -35,8 +35,8 @@ function Character(id, characterID, nickName, playerDetails){
       .attr({h: 60, w:40})
       .gravityConst(1200)
       .ignoreHits(id + '_projectile')
-      .reel("walkingRight", 250, [[0, 0], [1, 0], [2, 0], [3, 0],[0, 1], [1, 1]])
-      .reel("walkingLeft", 250, [[3,2], [2,2], [1, 2], [0, 2], [3,3], [2,3]])
+      .reel("walkingRight", 400, [[0, 0], [1, 0], [2, 0], [3, 0],[0, 1], [1, 1]])
+      .reel("walkingLeft", 400, [[3,2], [2,2], [1, 2], [0, 2], [3,3], [2,3]])
       .reel("staticRight", 1, [[1,1]])
       .reel("staticLeft", 1, [[2,3]]);
       this.dead = false;

@@ -24,7 +24,7 @@ function lobbyBegin() {
         let charMenu = characterMenu();
         let lobbyMenu = lobbyJoiner();
 
-        $("#splashImage1").animate({opacity: 0.05});
+        
         $('.lobby').append(charMenu, lobbyMenu);
         $(charMenu).animate({'margin-left' : '0',opacity : 1.0});
         $(lobbyMenu).animate({'margin-left' : '0',opacity : 1.0});

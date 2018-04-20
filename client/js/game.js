@@ -13,6 +13,11 @@ var sprites = {"sprites": {
     "tileh": 361,
     "map": { "mike_player": [0,0]}
   },
+  "client/res/img/pascaleComplete.png" : {
+    "tile": 300,
+    "tileh": 361,
+    "map": { "pascal_player": [0,0]}
+  },
   "client/res/img/tempPlayer.png" : {
     "tile" : 80,
     "tileh" : 100,
@@ -40,7 +45,7 @@ function mainGame(gameData){
 
   //Init all player entities once all sprites are loaded
   Crafty.load(sprites, function(){
-
+    $('#splashImage1').attr({hidden: true});
     addPlayers(gameData.playerData);
     //Add client event listeners
     handlePlayerInput();
